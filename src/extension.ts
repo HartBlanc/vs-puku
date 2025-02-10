@@ -105,18 +105,6 @@ class PleaseWollemiExtension {
         this.runWollemiGOFMT(document, path.dirname(document.fileName));
         return;
       }
-      case "plaintext": {
-        // If it's a BUILD file, we run the wollemi build file formatter.
-        if (path.basename(document.fileName).includes("BUILD")) {
-          this.runWollemiBUILD(document, path.dirname(document.fileName));
-          return;
-        }
-      }
-      case "plz": {
-        // If it's a BUILD file, we run the wollemi build file formatter.
-        this.runWollemiBUILD(document, path.dirname(document.fileName));
-        return;
-      }
       default: {
         this._outputChannel.appendLine(
           `vs-wollemi does not currently support ${document.languageId} files.`
@@ -134,7 +122,7 @@ class PleaseWollemiExtension {
   }
 
   public runWollemiGOFMT(doc: TextDocument, path: string): void {
-    const cmd = `${this.wollemiCommand} gofmt ${path}`;
+    const cmd = `${this.wollemiCommand} fmt ${path}`;
 
     this._outputChannel.appendLine("Saved GO file: " + doc.fileName);
     this._runWollemiCmd(cmd, doc);
