@@ -1,12 +1,12 @@
 {
-    "name": "vs-wollemi",
-    "displayName": "vs-wollemi",
-    "description": "Easy vscode support for Wollemi Please autogeneration.",
-    "version": "0.0.1",
-    "publisher": "jamesjarvis",
+    "name": "vs-puku",
+    "displayName": "vs-puku",
+    "description": "Easy vscode support for Puku Please autogeneration.",
+    "version": "0.0.3",
+    "publisher": "HartBlanc",
     "repository": {
         "type": "git",
-        "url": "https://github.com/jamesjarvis/vs-wollemi"
+        "url": "https://github.com/HartBlanc/vs-puku"
     },
     "engines": {
         "vscode": "^1.55.0"
@@ -20,37 +20,37 @@
     "main": "./out/extension.js",
     "contributes": {
         "commands": [{
-                "command": "vs-wollemi.enableOnSave",
-                "title": "Run Wollemi On Save: Enable"
+                "command": "vs-puku.enableOnSave",
+                "title": "Run Puku On Save: Enable"
             },
             {
-                "command": "vs-wollemi.disableOnSave",
-                "title": "Run Wollemi On Save: Disable"
+                "command": "vs-puku.disableOnSave",
+                "title": "Run Puku On Save: Disable"
             }
         ],
         "configuration": {
-            "title": "VS Wollemi command configuration.",
+            "title": "VS Puku command configuration.",
             "type": "object",
             "properties": {
-                "vs-wollemi.autoClearConsole": {
+                "vs-puku.autoClearConsole": {
                     "type": "boolean",
                     "scope": "resource",
                     "default": true,
                     "description": "Automatically clear the console on each save before running commands."
                 },
-                "vs-wollemi.runOnSave": {
+                "vs-puku.runOnSave": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Run vs-wollemi on file save."
+                    "description": "Run vs-puku on file save."
                 },
-                "vs-wollemi.shell": {
+                "vs-puku.shell": {
                     "type": "string",
                     "description": "Shell to execute the command with (gets passed to child_process.exec as an options arg. e.g. child_process(cmd, { shell })."
                 },
-                "vs-wollemi.wollemiCommand": {
+                "vs-puku.pukuCommand": {
                     "type": "string",
-                    "description": "Command that triggers wollemi (default: 'wollemi', but another example may be 'plz update-go-targets'",
-                    "default": "wollemi"
+                    "description": "Command that triggers puku (default: 'puku', but another example may be 'plz update-go-targets'",
+                    "default": "puku"
                 }
             }
         }

@@ -1,31 +1,24 @@
-# VS-Wollemi
+# VS-Puku
 
-[![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version-short/jamesjarvis.vs-wollemi.svg)](https://marketplace.visualstudio.com/items?itemName=jamesjarvis.vs-wollemi)
-[![VSCode Installs](https://vsmarketplacebadge.apphb.com/installs-short/jamesjarvis.vs-wollemi.svg)](https://marketplace.visualstudio.com/items?itemName=jamesjarvis.vs-wollemi)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/jamesjarvis/vs-wollemi.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/jamesjarvis/vs-wollemi/alerts/)
-
-This is a simple VSCode wrapper around [Wollemi](https://github.com/tcncloud/wollemi) that runs wollemi each time a `go` or `plz BUILD` file is saved.
+This is a simple VSCode wrapper around [Puku](https://github.com/please-build/puku) that runs puku each time a `go` file is saved.
 
 ## Features
 
-Will run wollemi (a helper for writing plz BUILD files) on save.
+Will run puku (a helper for writing plz BUILD files) on save.
 
 ## Requirements
 
-- [Wollemi](https://github.com/tcncloud/wollemi)
+- [Puku](https://github.com/please-build/puku)
 - [Please](https://github.com/thought-machine/please)
-
-It's possible to use wollemi through a plz alias command, so I would recommend instally plz and optionally wollemi.
-If you are using wollemi through a plz alias command, change the `vs-wollemi.wollemiCommand` setting to your alias command (eg: `plz wollemi`).
 
 ## Extension Settings
 
 This extension contributes the following settings:
 
-- `vs-wollemi.runOnSave`: enable/disable this extension
-- `vs-wollemi.autoClearConsole`: clears the "output" console before each run
-- `vs-wollemi.wollemiCommand`: command to trigger `wollemi` (you won't need to change this if you are using the wollemi tool directly)
-- `vs-wollemi.shell`: shell to execute the command with, probably don't bother changing this.
+- `vs-puku.runOnSave`: enable/disable this extension
+- `vs-puku.autoClearConsole`: clears the "output" console before each run
+- `vs-puku.pukuCommand`: command to trigger `puku` (you won't need to change this if you are using the puku tool directly)
+- `vs-puku.shell`: shell to execute the command with, probably don't bother changing this.
 
 ## Known Issues
 
@@ -36,4 +29,4 @@ This extension contributes the following settings:
 
 ### 0.0.1
 
-Initial release of vs-wollemi, will run `${wollemi} fmt ${path}` on save and atm that's all I need to stay tuned for potential updates...
+Initial release of vs-puku, will run `${puku} fmt ${path}` on save and atm that's all I need to stay tuned for potential updates...

@@ -11,19 +11,19 @@ import * as path from "path";
 import { exec } from "child_process";
 
 export function activate() {
-  var extension = new PleaseWollemiExtension();
+  var extension = new PleasePukuExtension();
   extension.showOutputMessage();
 
   workspace.onDidChangeConfiguration(() => {
-    extension.showOutputMessage("vs-wollemi: Reloading config.");
+    extension.showOutputMessage("vs-puku: Reloading config.");
     extension.loadConfig();
   });
 
-  commands.registerCommand("vs-wollemi.enableOnSave", () => {
-    workspace.getConfiguration("vs-wollemi").update("runOnSave", true, true);
+  commands.registerCommand("vs-puku.enableOnSave", () => {
+    workspace.getConfiguration("vs-puku").update("runOnSave", true, true);
   });
-  commands.registerCommand("vs-wollemi.disableOnSave", () => {
-    workspace.getConfiguration("vs-wollemi").update("runOnSave", false, true);
+  commands.registerCommand("vs-puku.disableOnSave", () => {
+    workspace.getConfiguration("vs-puku").update("runOnSave", false, true);
   });
 
   workspace.onDidSaveTextDocument((document: TextDocument) => {
@@ -34,35 +34,37 @@ export function activate() {
 
 export function deactivate() {}
 
-interface WollemiConfig {
+interface PukuConfig {
   runOnSave: boolean;
   autoClearConsole: boolean;
   shell: string;
-  wollemiCommand: string;
+  pukuCommand: string;
 }
 
-class PleaseWollemiExtension {
+class PleasePukuExtension {
   private _outputChannel: OutputChannel;
-  private _config: WollemiConfig;
+  private _config: PukuConfig;
 
   constructor() {
-    this._outputChannel = window.createOutputChannel("vs-wollemi");
+    this._outputChannel = window.createOutputChannel("vs-puku");
     this._config = this.loadConfig();
-    console.log(this._config);
   }
 
-  public loadConfig(): WollemiConfig {
-    let config = <WollemiConfig>{};
+  public loadConfig(): PukuConfig {
+    let config = <PukuConfig>{};
     config.autoClearConsole = workspace
-      .getConfiguration("vs-wollemi")
+      .getConfiguration("vs-puku")
       .get("autoClearConsole", true);
     config.runOnSave = workspace
-      .getConfiguration("vs-wollemi")
+      .getConfiguration("vs-puku")
       .get("runOnSave", true);
-    config.shell = workspace.getConfiguration("vs-wollemi").get("shell", "");
-    config.wollemiCommand = workspace
-      .getConfiguration("vs-wollemi")
-      .get("wollemiCommand", "wollemi");
+    config.shell = workspace.getConfiguration("vs-puku").get("shell", "bash");
+    if (!config.shell) {
+      config.shell = "bash"
+    }
+    config.pukuCommand = workspace
+      .getConfiguration("vs-puku")
+      .get("pukuCommand", "plz puku");
     this._config = config;
     return config;
   }
@@ -73,8 +75,8 @@ class PleaseWollemiExtension {
   public get shell(): string {
     return this._config.shell;
   }
-  public get wollemiCommand(): string {
-    return this._config.wollemiCommand;
+  public get pukuCommand(): string {
+    return this._config.pukuCommand;
   }
   public get autoClearConsole(): boolean {
     return this._config.autoClearConsole;
@@ -85,7 +87,7 @@ class PleaseWollemiExtension {
    */
   public showOutputMessage(message?: string): void {
     message =
-      message || `vs-wollemi ${this.isEnabled ? "enabled" : "disabled"}.`;
+      message || `vs-puku ${this.isEnabled ? "enabled" : "disabled"}.`;
     this._outputChannel.appendLine(message);
   }
 
@@ -101,36 +103,27 @@ class PleaseWollemiExtension {
 
     switch (document.languageId) {
       case "go": {
-        // If it's a go file, we run the wollemi build file completer.
-        this.runWollemiGOFMT(document, path.dirname(document.fileName));
+        // If it's a go file, we run the puku build file completer.
+        this.runPukuGOFMT(document, path.dirname(document.fileName));
         return;
       }
       default: {
         this._outputChannel.appendLine(
-          `vs-wollemi does not currently support ${document.languageId} files.`
+          `vs-puku does not currently support ${document.languageId} files.`
         );
         return;
       }
     }
   }
 
-  public runWollemiBUILD(doc: TextDocument, path: string): void {
-    const cmd = `${this.wollemiCommand} fmt ${path}`;
-
-    this._outputChannel.appendLine("Saved BUILD file: " + doc.fileName);
-    this._runWollemiCmd(cmd, doc);
-  }
-
-  public runWollemiGOFMT(doc: TextDocument, path: string): void {
-    const cmd = `${this.wollemiCommand} fmt ${path}`;
-
+  public runPukuGOFMT(doc: TextDocument, path: string): void {
+    const cmd = `${this.pukuCommand} fmt ${path}`;
     this._outputChannel.appendLine("Saved GO file: " + doc.fileName);
-    this._runWollemiCmd(cmd, doc);
+    this._runPukuCmd(cmd, doc);
   }
 
-  public _runWollemiCmd(cmd: string, doc: TextDocument): void {
+  public _runPukuCmd(cmd: string, doc: TextDocument): void {
     this.showOutputMessage(`*** cmd '${cmd}' start.`);
-
     var child = exec(cmd, this._getExecOption(doc));
     child.stdout!.on("data", (data) => this._outputChannel.append(data));
     child.stderr!.on("data", (data) => this._outputChannel.append(data));
