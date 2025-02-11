@@ -58,10 +58,9 @@ class PleasePukuExtension {
     config.runOnSave = workspace
       .getConfiguration("vs-puku")
       .get("runOnSave", true);
-    config.shell = workspace.getConfiguration("vs-puku").get("shell", "bash");
-    if (!config.shell) {
-      config.shell = "bash"
-    }
+    config.shell = workspace
+      .getConfiguration("vs-puku")
+      .get("shell", "bash");
     config.pukuCommand = workspace
       .getConfiguration("vs-puku")
       .get("pukuCommand", "plz puku");
