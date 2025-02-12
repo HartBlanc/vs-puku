@@ -44,10 +44,12 @@ interface PukuConfig {
 class PleasePukuExtension {
   private _outputChannel: OutputChannel;
   private _config: PukuConfig;
+  private _debounce_log: {[key:string]: TextDocument};
 
   constructor() {
     this._outputChannel = window.createOutputChannel("vs-puku");
     this._config = this.loadConfig();
+    this._debounce_log = {};
   }
 
   public loadConfig(): PukuConfig {
@@ -103,7 +105,7 @@ class PleasePukuExtension {
     switch (document.languageId) {
       case "go": {
         // If it's a go file, we run the puku build file completer.
-        this.runPukuGOFMT(document, path.dirname(document.fileName));
+        this.runPukuCmd(document);
         return;
       }
       default: {
@@ -115,26 +117,34 @@ class PleasePukuExtension {
     }
   }
 
-  public runPukuGOFMT(doc: TextDocument, path: string): void {
-    const cmd = `${this.pukuCommand} fmt ${path}`;
-    this._outputChannel.appendLine("Saved GO file: " + doc.fileName);
-    this._runPukuCmd(cmd, doc);
-  }
+  public runPukuCmd(document: TextDocument): void {
+    this._outputChannel.appendLine("Saved GO file: " + document.fileName);
+    let k = path.dirname(document.fileName);
+    if (k in this._debounce_log) {
+        // debounce duplicate concurrent requests for the same package
+        return
+    }
+    this._debounce_log[k] = document
 
-  public _runPukuCmd(cmd: string, doc: TextDocument): void {
+    const cmd = `${this.pukuCommand} fmt ${document.fileName}`;
     this.showOutputMessage(`*** cmd '${cmd}' start.`);
-    var child = exec(cmd, this._getExecOption(doc));
+    var child = exec(cmd, this._getExecOption(document));
+
     child.stdout!.on("data", (data) => this._outputChannel.append(data));
     child.stderr!.on("data", (data) => this._outputChannel.append(data));
+
     child.on("error", (e) => {
       this.showOutputMessage(e.message);
+      delete this._debounce_log[path.dirname(document.fileName)];
     });
+
     child.on("exit", (e) => {
       if (e != 0) {
         this.showOutputMessage(`*** cmd '${cmd}' exited with status: ${e}.`);
-        return;
+      } else {
+        this.showOutputMessage(`*** cmd '${cmd}' successful.`);
       }
-      this.showOutputMessage(`*** cmd '${cmd}' successful.`);
+      delete this._debounce_log[path.dirname(document.fileName)];
     });
   }
 

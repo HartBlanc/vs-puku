@@ -2,7 +2,7 @@
   "name": "vs-puku",
   "displayName": "vs-puku",
   "description": "Easy vscode support for Puku Please autogeneration.",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publisher": "HartBlanc",
   "repository": {
     "type": "git",
@@ -79,4 +79,3 @@
     "vscode-test": "^1.5.0"
   }
 }
-
